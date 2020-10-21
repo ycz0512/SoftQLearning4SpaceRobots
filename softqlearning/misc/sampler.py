@@ -1,6 +1,12 @@
 import numpy as np
+import os
 
 from rllab.misc import logger
+from experiment.hyper_parameters import SHARED_PARAMS
+
+save_path = SHARED_PARAMS['model_save_path']
+if not os.path.exists(save_path):
+    os.mkdir(save_path)
 
 
 def rollout(env, policy, path_length):
@@ -33,11 +39,6 @@ def rollout(env, policy, path_length):
         observations[t] = observation
 
         observation = next_obs
-
-        # if render:
-        #     env.render()
-        #     time_step = 0.05
-        #     time.sleep(time_step / speedup)
 
         if terminal:
             break
@@ -137,18 +138,13 @@ class SimpleSampler(Sampler):
             self._path_return = 0
             self._n_episodes += 1
 
-            with open('../reward.txt', 'a+') as f:
+            with open(save_path + '/rewards.txt', 'a+') as f:
                 f.write(str(self._n_episodes) + ' ' + str(self._last_path_return) + '\n')
 
         else:
             self._current_observation = next_observation
 
     def log_diagnostics(self):
-        # super(SimpleSampler, self).log_diagnostics()
-        # logger.record_tabular('max-path-return', self._max_path_return)
-        # logger.record_tabular('last-path-return', self._last_path_return)
-        # logger.record_tabular('episodes', self._n_episodes)
-        # logger.record_tabular('total-samples', self._total_samples)
         print('last path return =', self._last_path_return)
 
 
