@@ -36,4 +36,5 @@ To simulate the agent, run:
 
 `python experiment/visualize.py --env=SpaceRobot3link --model=<model-directory>`
 
-This will simulate the model saved at `<model-directory>` (the directory of `.ckpt` file that contains the trained model).
+- This will simulate the model saved at `<model-directory>` (the directory of `.ckpt` file that contains the trained model).
+- The log(.txt) files generated in the simulation will be saved to the `../viz_data` directory by default.
