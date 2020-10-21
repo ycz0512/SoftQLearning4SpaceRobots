@@ -22,7 +22,7 @@ arg_parser = parser.parse_args()
 if arg_parser.env == 'SpaceRobot3link':
     env = SpaceRobot3link()
 elif arg_parser.env == 'SpaceRobotDouble3link':
-    env = SpaceRobotDouble3link
+    env = SpaceRobotDouble3link()
 else:
     raise NotImplementedError
 
