@@ -12,6 +12,28 @@ and supports running experiments on V-REP simulation environments.
 
 2. Install requirements: `pip install -r requirements.txt`
 
-3. Install and run [V-REP](https://www.coppeliarobotics.com/downloads). Load the V-REP model.  
-  Some example V-REP models are available in the `VREP MODEL` file.  
-  Adding the flag `-h` to run V-REP in a headless mode.
+3. Install and run [V-REP](https://www.coppeliarobotics.com/downloads). Load the V-REP model.
+- Some example V-REP models(.ttt) are available in the `VREP MODEL` file.
+- Adding the flag `-h` to run V-REP in a headless mode.
+
+## Examples
+
+**Note:** Before you start running any commands below, always make sure that the V-REP simulator is on (whether in headless mode or not), and the environment you have in the command should be the same as what you have in the V-REP simulator.
+
+### Loading and Training an agent
+
+To load a pre-trained model and train the agent, run:
+
+`python experiment/run.py --env=SpaceRobot3link --load_model=<model-directory>`
+
+- `SpaceRobot3link` can be replaced with `SpaceRobotDouble3link`, where `SpaceRobot3link` specifies the space robot with a single 3-DoF manipulator and `SpaceRobotDouble3link` specifies the space robot with dual 3-DoF manipulators. If you remove the flag, `--env` will be `SpaceRobot3link` by default.
+- `<model-directory>` specifies the directory of `.ckpt` file that contains the pre-trained model. If you remove the flag, training will start from scratch.
+- The log(.txt) and model(.ckpt) will be saved to the `../data` directory by default.
+
+### Visualizing an agent
+
+To simulate the agent, run:
+
+`python experiment/visualize.py --env=SpaceRobot3link --model=<model-directory>`
+
+This will simulate the model saved at `<model-directory>` (the directory of `.ckpt` file that contains the trained model).
