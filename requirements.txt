@@ -1,40 +1,27 @@
 
 # dependencies:
-scipy
 path.py
-python-dateutil
 Mako
 Flask
-pygame
-h5py
 matplotlib
-opencv-python
-pandas
 six
 
 
 # pip
-atari-py
-Box2D
 cffi
-tqdm
 gtimer
 nose2
 psutil
 plotly
-Pillow
-pyglet
 PyPrind
 PyOpenGL
-Cython
 cloudpickle
 cached_property
 
-joblib=0.12
-Theano=1.0.2
-Lasagne=0.2.dev1
-mujoco_py==1.50.1.68
+joblib==0.12
+Theano==1.0.2
+Lasagne==0.2.dev1
 numpy==1.14.5
-tensorflow==1.12.0
-mkl-service=1.1.2
+tensorflow>=1.15.4,<2.0.0
+mkl-service==1.1.2
 mkl==2017.0.4
