@@ -1,0 +1,22 @@
+# pip
+cached-property
+cloudpickle
+PyOpenGL
+path.py
+six
+cffi
+flask
+gtimer
+lasagne
+mako
+nose2
+plotly
+psutil
+pyprind
+
+numpy==1.14.5
+tensorflow>=1.9.0,<1.14.0
+joblib>=0.12,<0.13
+mkl-service=1.1.2
+mkl==2017.0.4
+Theano==1.0.2
