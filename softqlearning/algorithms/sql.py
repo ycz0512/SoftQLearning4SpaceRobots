@@ -3,10 +3,8 @@ import tensorflow as tf
 
 from rllab.misc import logger
 from rllab.misc.overrides import overrides
-
 from softqlearning.misc.kernel import adaptive_isotropic_gaussian_kernel
 from softqlearning.misc import tf_utils
-
 from softqlearning.algorithms.rl_algorithm import RLAlgorithm
 
 EPS = 1e-6
@@ -329,17 +327,10 @@ class SQL(RLAlgorithm):
         qf, bellman_residual = self._sess.run(
             [self._q_values, self._bellman_residual], feeds)
 
-        # logger.record_tabular('qf-avg', np.mean(qf))
-        # logger.record_tabular('qf-std', np.std(qf))
-        # logger.record_tabular('mean-sq-bellman-error', bellman_residual)
-        #
-        # self.policy.log_diagnostics(batch)
-        # if self.plotter:
-        #     self.plotter.draw()
+        logger.record_tabular('qf-avg', np.mean(qf))
+        logger.record_tabular('mean-sq-bellman-error', bellman_residual)
 
         self.n += 1
-        with open('../mean-sq-bellman-error.txt', 'a+') as f:
-            f.write(str(self.n) + ' ' + str(bellman_residual) + '\n')
 
     @overrides
     def get_snapshot(self, epoch):
