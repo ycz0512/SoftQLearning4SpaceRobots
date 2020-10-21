@@ -39,7 +39,7 @@ class Dimension(BundleType):
         BundleType.__init__(self, variables)
 
 
-class SpaceRobot3link(object):
+class SpaceRobotDouble3link(object):
 
     def __init__(self):
         self.handles = {}
