@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 from rllab.misc import logger
 from rllab.algos.base import Algorithm
-from experiment.hyper_parameters import SHARED_PARAMS, ENV_PARAMS
+from experiment.hyper_parameters import SHARED_PARAMS
 from softqlearning.misc import tf_utils
 from softqlearning.misc.sampler import rollouts
 
@@ -54,14 +54,12 @@ class RLAlgorithm(Algorithm):
         """Perform RL training.
 
         Args:
-            env (`rllab.Env`): Environment used for training
+            env (`V-REP`): Environment used for training
             policy (`Policy`): Policy used for training
             pool (`PoolBase`): Sample pool to add samples to
         """
         self._init_training()
         self.sampler.initialize(env, policy, pool)
-
-        # evaluation_env = deep_clone(env) if self._eval_n_episodes else None
 
         with tf_utils.get_default_session().as_default() as sess:
             if load is not None:
@@ -88,34 +86,31 @@ class RLAlgorithm(Algorithm):
                             batch=self.sampler.random_batch())
                     gt.stamp('train')
 
-                if epoch % 1 == 0 or epoch >= ENV_PARAMS['n_epochs'] - 20:
-                    self._evaluate(policy, env)
-                    print('@ epoch %d : ' % epoch)
-                    # gt.stamp('eval')
-                    #
-                    # params = self.get_snapshot(epoch)
-                    # logger.save_itr_params(epoch, params)
-                    #
-                    # time_itrs = gt.get_times().stamps.itrs
-                    # time_eval = time_itrs['eval'][-1]
-                    # time_total = gt.get_times().total
-                    # time_train = time_itrs.get('train', [0])[-1]
-                    # time_sample = time_itrs.get('sample', [0])[-1]
-                    #
-                    # logger.record_tabular('time-train', time_train)
-                    # logger.record_tabular('time-eval', time_eval)
-                    # logger.record_tabular('time-sample', time_sample)
-                    # logger.record_tabular('time-total', time_total)
-                    # logger.record_tabular('epoch', epoch)
+                self._evaluate(policy, env)
+                print('@ epoch %d : ' % epoch)
+                gt.stamp('eval')
 
-                    self.sampler.log_diagnostics()
+                params = self.get_snapshot(epoch)
+                logger.save_itr_params(epoch, params)
 
-                    logger.dump_tabular(with_prefix=False)
-                    logger.pop_prefix()
+                time_itrs = gt.get_times().stamps.itrs
+                time_eval = time_itrs['eval'][-1]
+                time_total = gt.get_times().total
+                time_train = time_itrs.get('train', [0])[-1]
+                time_sample = time_itrs.get('sample', [0])[-1]
 
-                    # env.reset()
+                logger.record_tabular('time-train', time_train)
+                logger.record_tabular('time-eval', time_eval)
+                logger.record_tabular('time-sample', time_sample)
+                logger.record_tabular('time-total', time_total)
+                logger.record_tabular('epoch', epoch)
 
-                if (epoch > ENV_PARAMS['n_epochs'] * 0 and epoch % 5 == 0) or epoch >= ENV_PARAMS['n_epochs'] - 100:
+                self.sampler.log_diagnostics()
+
+                logger.dump_tabular(with_prefix=False)
+                logger.pop_prefix()
+
+                if epoch % SHARED_PARAMS['pkl_gap'] == 0:
                     saver = tf.train.Saver()
                     saver.save(sess, save_path=save_path+'/model-'+str(epoch)+'.ckpt')
                     print('Model saved ...')
@@ -129,24 +124,14 @@ class RLAlgorithm(Algorithm):
             return
 
         # TODO: max_path_length should be a property of environment.
-        # paths = rollouts(evaluation_env, policy, self.sampler._max_path_length,
-        #                  self._eval_n_episodes)
+        paths = rollouts(evaluation_env, policy, self.sampler._max_path_length,
+                         self._eval_n_episodes)
 
-        # total_returns = [path['rewards'].sum() for path in paths]
-        # episode_lengths = [len(p['rewards']) for p in paths]
+        total_returns = [path['rewards'].sum() for path in paths]
+        episode_lengths = [len(p['rewards']) for p in paths]
 
-        # logger.record_tabular('return-average', np.mean(total_returns))
-        # logger.record_tabular('return-min', np.min(total_returns))
-        # logger.record_tabular('return-max', np.max(total_returns))
-        # logger.record_tabular('return-std', np.std(total_returns))
-        # logger.record_tabular('episode-length-avg', np.mean(episode_lengths))
-        # logger.record_tabular('episode-length-min', np.min(episode_lengths))
-        # logger.record_tabular('episode-length-max', np.max(episode_lengths))
-        # logger.record_tabular('episode-length-std', np.std(episode_lengths))
-
-        # evaluation_env.log_diagnostics(paths)
-        # if self._eval_render:
-        #     evaluation_env.render(paths)
+        logger.record_tabular('return-average', np.mean(total_returns))
+        logger.record_tabular('episode-length-avg', np.mean(episode_lengths))
 
         if self.sampler.batch_ready():
             batch = self.sampler.random_batch()
