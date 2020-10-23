@@ -20,7 +20,7 @@ and supports running experiments on V-REP simulation environments.
 ## Examples
 **Note:** Before you start running any commands below, always make sure that the V-REP simulator is on (whether in headless mode or not), and the environment you have in the command should be the same as what you have in the V-REP simulator.
 
-### Loading and Training an agent
+### Loading and Training Agents
 To load a pre-trained model and train the agent, run:
 ```
 python experiment/run.py --env=SpaceRobot3link --load_model=<model-directory>
@@ -29,10 +29,10 @@ python experiment/run.py --env=SpaceRobot3link --load_model=<model-directory>
 - `<model-directory>` specifies the directory of `.ckpt` file that contains the pre-trained model. If you remove the flag, training will start from scratch.
 - The log(.txt) and model(.ckpt) will be saved to the `../data` directory by default.
 
-### Visualizing an agent
+### Visualizing Agents
 To simulate the agent, run:
 ```
 python experiment/visualize.py --env=SpaceRobot3link --model=<model-directory>
 ```
 - This will simulate the agent saved at `<model-directory>` (the directory of `.ckpt` file that contains the trained model).
-- The log(.txt) files generated in the simulation will be saved to the `../viz_data` directory by default.
+- The log(.txt) files generated in the simulation will be saved to `../viz_data` directory by default.
