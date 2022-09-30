@@ -18,7 +18,7 @@ PyOpenGL
 cloudpickle
 cached_property
 
-joblib==0.12
+joblib==1.2.0
 Theano==1.0.2
 Lasagne==0.2.dev1
 numpy==1.14.5
